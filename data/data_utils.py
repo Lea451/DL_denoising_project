@@ -42,12 +42,12 @@ def extract_wav(project_path) :
 # extract_wav(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project")
 
 
-def generate_global_tensor(dir_path, name, output_folder):
+def generate_global_signals(dir_path, name, output_folder):
     """
     Input : directory path (in which two subdirectories 'train' and 'test'), 
             name of the output file
     Output : one torch tensors, one array
-        signals = tensor with all [noisy signal, clean signal]
+        signals = array with all [noisy signal, clean signal]
         names = array with the names
     """
     signals = []
@@ -69,45 +69,37 @@ def generate_global_tensor(dir_path, name, output_folder):
     np.save(output_path_names,np.array(names))
 
 # TO DO ONCE
-#generate_global_tensor(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
-#generate_global_tensor(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
+#generate_global_signals(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
+#generate_global_signals(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
 
 
-class MyDatasetSigals(torch.utils.data.Dataset):
-    def __init__(self, path_to_signals, path_to_names):
-        self.signals = np.load(path_to_signals)
-        self.names = np.load(path_to_names)
-         
-        
-    def __len__(self): #retourne le nombre de signaux dans le dataset
-        return self.signals.shape[0]
-    
-        
-    def __getitem__(self,i): #retourne pour chaque indice i un couple (data_i, label_i), data_i étant un signal et label_i le label associé au signal
-        clean_noisy = (self.signals[i])
-        clean = (clean_noisy[1])
-        noisy = (clean_noisy[0])
-        return torch.tensor(noisy).type(torch.LongTensor), torch.tensor(clean).type(torch.LongTensor)    
 
+def generate_global_specto(dir_path, name, output_folder):
+    """
+    Input : directory path (in which two subdirectories 'train' and 'test'), 
+            name of the output file
+    Output : one torch tensors, one array
+        spectos = array with all [noisy spectogram, clean spectogram]
+    """
+    spectos = []
+    noisy_dir = os.path.join(dir_path, r"noisy_signals")
+    clean_dir = os.path.join(dir_path, r"clean_signals")
+    output_path_spectos = os.path.join(output_folder, name +'_spectos.npy')
+    for filename in os.listdir(noisy_dir):
+        if filename[-4:]=='.npy':
+            noisy_filepath = os.path.join(noisy_dir, filename)
+            clean_filepath = os.path.join(clean_dir, filename)
+            noisy_signal = np.load(noisy_filepath)
+            clean_signal = np.load(clean_filepath)
+            longueur = len(noisy_signal)
+            _, _, specto_clean = ss.stft(clean_signal, 1, nperseg=longueur//20, noverlap=longueur//40)
+            _, _, specto_noisy = ss.stft(noisy_signal, 1, nperseg= longueur//20, noverlap=longueur//40)
+            spectos.append([specto_noisy, specto_clean])
+    np.save(output_path_spectos, np.array(spectos))
+#TO DO ONCE
+#generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
+#generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
 
-class MyDatasetSpecto(torch.utils.data.Dataset):
-    def __init__(self, path_to_signals, path_to_names):
-        self.signals = np.load(path_to_signals)
-        self.names = np.load(path_to_names)
-         
-        
-    def __len__(self): #retourne le nombre de signaux dans le dataset
-        return self.signals.shape[0]
-    
-        
-    def __getitem__(self,i): #retourne pour chaque indice i un couple (data_i, label_i), data_i étant un signal et label_i le label associé au signal
-        clean_noisy = (self.signals[i])
-        clean = clean_noisy[1]
-        noisy = torch.Tensor(clean_noisy[0])
-        longueur = len(noisy)
-        _, _, specto_clean = ss.welch(clean, 1, longueur//20)
-        _, _, specto_noisy = ss.welch(noisy, 1, longueur//20)
-        return torch.tensor(specto_noisy).type(torch.LongTensor), torch.tensor(specto_clean).type(torch.LongTensor)    
 
 
 def load_data(data_path): 

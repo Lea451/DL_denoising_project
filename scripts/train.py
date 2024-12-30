@@ -1,20 +1,40 @@
 import torch
 import torch.nn as nn
+import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
 
 class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entrée
-    def __init__(self, noisy, clean):
-        self.noisy = noisy
-        self.clean = clean
+    def __init__(self, path_to_signals, path_to_names):
+        self.spectos = np.load(path_to_signals)
+        self.names = np.load(path_to_names)
 
     def __len__(self):
         return len(self.noisy)
 
-    def __getitem__(self, idx):
-        noisy = self.noisy[idx]
-        clean = self.clean[idx]
-        return torch.tensor(noisy, dtype=torch.float32), torch.tensor(clean, dtype=torch.float32)
+    def __getitem__(self, i):
+        clean_noisy = (self.signals[i])
+        s_clean = (clean_noisy[1])
+        s_noisy = (clean_noisy[0])
+        return torch.tensor(s_noisy).type(torch.LongTensor), torch.tensor(s_clean).type(torch.LongTensor)    
+        #return torch.tensor(noisy, dtype=torch.float32), torch.tensor(clean, dtype=torch.float32)
+
+
+
+class SignalsDataset(Dataset):
+    def __init__(self, path_to_signals, path_to_names):  #charge les signaux (par paires bruité / non bruités)
+        self.signals = np.load(path_to_signals)
+        self.names = np.load(path_to_names)
+        
+    def __len__(self): #retourne le nombre de signaux dans le dataset
+        return self.signals.shape[0]
+    
+        
+    def __getitem__(self,i): #retourne pour chaque indice i un couple (data_i, label_i), data_i étant un signal et label_i le label associé au signal
+        clean_noisy = (self.signals[i])
+        clean = (clean_noisy[1])
+        noisy = (clean_noisy[0])
+        return torch.tensor(noisy).type(torch.LongTensor), torch.tensor(clean).type(torch.LongTensor)    
 
 def train_model(model, train_loader, val_loader, criterion, optimizer, device, opt):
     best_loss = float('inf')
