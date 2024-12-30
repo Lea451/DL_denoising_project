@@ -14,8 +14,8 @@ class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entr
 
     def __getitem__(self, i):
         clean_noisy = (self.spectos[i])
-        s_clean = torch.tensor((clean_noisy[0])) #inversion par rapport aux signaux purs
-        s_noisy = torch.tensor((clean_noisy[1]))
+        s_clean = torch.tensor((clean_noisy[1])) #Tenseur 2D : temps x frequence sur le specto [T,C]
+        s_noisy = torch.tensor((clean_noisy[0]))  #Tenseur 2D : temps x frequence sur le specto [T,C]
         print(s_clean.shape)
         return s_noisy.type(torch.LongTensor), s_clean.type(torch.LongTensor)    
 

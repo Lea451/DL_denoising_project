@@ -94,18 +94,16 @@ def generate_global_specto(dir_path, name, output_folder):
             longueur = len(noisy_signal)
             _, _, specto_clean = ss.stft(clean_signal, 1, nperseg=longueur//20, noverlap=longueur//40)
             _, _, specto_noisy = ss.stft(noisy_signal, 1, nperseg= longueur//20, noverlap=longueur//40)
-            s_c_r = np.real(specto_clean)
-            s_c_i = np.imag(specto_clean)
-            s_n_r = np.real(specto_noisy)
-            s_n_i = np.imag(specto_noisy)
-            spectos.append([[s_c_r, s_c_i],[s_n_r,s_n_i]])
+            specto_clean = np.abs(specto_clean)
+            specto_noisy = np.abs(specto_noisy)  #comme dans l'article Unet, on utilise uniquement les magnitudes du spectogramme A MODIFIER SI BESOIN
+            spectos.append([specto_noisy, specto_clean]) 
     np.save(output_path_spectos, np.array(spectos))
 #TO DO ONCE
 #generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
 #generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
 
-#specto = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global\train_signals.npy")
-#print(specto.shape)
+specto = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global\train_spectos.npy")
+print(specto.shape)
 
 def load_data(data_path): 
     pass
