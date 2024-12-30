@@ -1,0 +1,20 @@
+# Ignore audio files
+*.wav
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore data files
+
+data/noisy_signals/*
+data/clean_signals/*
+
+# Ignore model files
+models/*.h5
+
+# Ignore Jupyter checkpoints
+*.ipynb_checkpoints
+
+# Ignore .npy
+*.npy
