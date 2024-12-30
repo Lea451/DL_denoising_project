@@ -13,12 +13,11 @@ class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entr
         return len(self.noisy)
 
     def __getitem__(self, i):
-        clean_noisy = (self.signals[i])
-        s_clean = (clean_noisy[1])
-        s_noisy = (clean_noisy[0])
-        return torch.tensor(s_noisy).type(torch.LongTensor), torch.tensor(s_clean).type(torch.LongTensor)    
-        #return torch.tensor(noisy, dtype=torch.float32), torch.tensor(clean, dtype=torch.float32)
-
+        clean_noisy = (self.spectos[i])
+        s_clean = torch.tensor((clean_noisy[0])) #inversion par rapport aux signaux purs
+        s_noisy = torch.tensor((clean_noisy[1]))
+        print(s_clean.shape)
+        return s_noisy.type(torch.LongTensor), s_clean.type(torch.LongTensor)    
 
 
 class SignalsDataset(Dataset):
