@@ -7,7 +7,7 @@ opt = {
     'learning_rate': 1e-3,
     'data_dir': './data',
     'model_save_path': './checkpoints/unet_model.pth',
-    'model_type': 'unet',  # Options: 'unet', 'resunet'
+    'model_type': 'resunet',  # Options: 'unet', 'resunet'
     'input_shape': (512, 128)  # Shape of the spectrogram input (height, width)
 }
 
