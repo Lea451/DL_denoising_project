@@ -1,4 +1,5 @@
 # to put in a config file 
+config = {}
 
 opt = {
     'batch_size': 32,
@@ -9,3 +10,5 @@ opt = {
     'model_type': 'unet',  # Options: 'unet', 'resunet'
     'input_shape': (512, 128)  # Shape of the spectrogram input (height, width)
 }
+
+config['opt'] = opt
