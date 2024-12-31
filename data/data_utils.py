@@ -2,10 +2,7 @@ import os
 import soundfile as sf
 import scipy.signal as ss
 import numpy as np 
-import torch
-from torch.utils.data import DataLoader
 
-import torch.share
 
 
 def wav_to_npy(audio_dir, output_dir):
@@ -71,8 +68,6 @@ def generate_global_signals(dir_path, name, output_folder):
 # TO DO ONCE
 #generate_global_signals(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
 #generate_global_signals(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
-
-
 
 def generate_global_specto(dir_path, name, output_folder):
     """

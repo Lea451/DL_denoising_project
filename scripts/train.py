@@ -4,6 +4,8 @@ import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
 
+
+### Dataset pour méthode à spectogrammes
 class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entrée
     def __init__(self, path_to_signals, path_to_names):
         self.spectos = np.load(path_to_signals)
@@ -19,7 +21,7 @@ class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entr
         print(s_clean.shape)
         return s_noisy.type(torch.LongTensor), s_clean.type(torch.LongTensor)    
 
-
+# Dataset pour méthode à signaux
 class SignalsDataset(Dataset):
     def __init__(self, path_to_signals, path_to_names):  #charge les signaux (par paires bruité / non bruités)
         self.signals = np.load(path_to_signals)
@@ -35,6 +37,14 @@ class SignalsDataset(Dataset):
         noisy = (clean_noisy[0])
         return torch.tensor(noisy).type(torch.LongTensor), torch.tensor(clean).type(torch.LongTensor)    
 
+
+### Création des datasets, et validation, Dataloaders
+
+#train_dataset, test_dataset = torch.utils.data.random_split(full_dataset, [0.8, 0.2])
+
+
+
+### Entraînement du modèle
 def train_model(model, train_loader, val_loader, criterion, optimizer, device, opt):
     best_loss = float('inf')
 
