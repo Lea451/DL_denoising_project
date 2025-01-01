@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
+
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1, kernel_size=3, padding=1):
         super(ResidualBlock, self).__init__()
@@ -50,7 +52,7 @@ class DecoderBlock(nn.Module):
     def forward(self, x, skip):
         x = self.upconv(x)  # Perform upsampling
         if x.shape[2:] != skip.shape[2:]:  # Check for mismatched spatial dimensions
-            skip = torch.nn.functional.interpolate(skip, size=x.shape[2:], mode='bilinear', align_corners=True)
+            x = torch.nn.functional.interpolate(x, size=skip.shape[2:], mode='bilinear', align_corners=True)
         x = torch.cat([x, skip], dim=1)  # Concatenate along channel axis
         x = self.res_block(x)  # Pass through residual block
         return x
@@ -101,7 +103,5 @@ class ResUnet(nn.Module):
 
         # Final convolution
         out = self.final_conv(dec1)
-        print(out.shape)
         return out
 
-#TODO : code tests for the model 

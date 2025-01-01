@@ -2,7 +2,7 @@
 config = {}
 
 opt = {
-    'batch_size': 32,
+    'batch_size': 6,
     'epochs': 1, #100 , #1 for testing
     'learning_rate': 1e-3,
     'data_dir': './data',
