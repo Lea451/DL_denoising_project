@@ -3,7 +3,7 @@ config = {}
 
 opt = {
     'batch_size': 32,
-    'epochs': 100,
+    'epochs': 1, #100 , #1 for testing
     'learning_rate': 1e-3,
     'data_dir': './data',
     'model_save_path': './checkpoints/unet_model.pth',

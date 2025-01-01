@@ -48,14 +48,22 @@ class DecoderBlock(nn.Module):
         self.res_block = ResidualBlock(out_channels * 2, out_channels)  # Concatenate skip connection
 
     def forward(self, x, skip):
-        x = self.upconv(x)
+        x = self.upconv(x)  # Perform upsampling
+        if x.shape[2:] != skip.shape[2:]:  # Check for mismatched spatial dimensions
+            skip = torch.nn.functional.interpolate(skip, size=x.shape[2:], mode='bilinear', align_corners=True)
         x = torch.cat([x, skip], dim=1)  # Concatenate along channel axis
-        x = self.res_block(x)
+        x = self.res_block(x)  # Pass through residual block
         return x
 
-class ResUNet(nn.Module):
+    #def forward(self, x, skip):
+    #    x = self.upconv(x)
+    #    x = torch.cat([x, skip], dim=1)  # Concatenate along channel axis
+    #    x = self.res_block(x)
+    #    return x
+
+class ResUnet(nn.Module):
     def __init__(self, in_channels, out_channels):
-        super(ResUNet, self).__init__()
+        super(ResUnet, self).__init__()
 
         # Encoder
         self.encoder1 = EncoderBlock(in_channels, 64)
@@ -93,6 +101,7 @@ class ResUNet(nn.Module):
 
         # Final convolution
         out = self.final_conv(dec1)
+        print(out.shape)
         return out
 
 #TODO : code tests for the model 

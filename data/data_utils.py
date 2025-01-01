@@ -16,6 +16,9 @@ def wav_to_npy(audio_dir, output_dir):
         npy_filepath = os.path.join(output_dir, npy_filename)
         np.save(npy_filepath, data)
         print(f"OK: {npy_filepath}")
+
+
+    
     
 def extract_wav(project_path) :
     """
@@ -35,9 +38,23 @@ def extract_wav(project_path) :
             output_dir = os.path.join(project_path, r'data', word_1, word_2)
             wav_to_npy(audio_dir,output_dir)
 
+print("Extracting wav files...")
+import os
+#python print(os.listdir(r"./audio_files/noisy_signals/train"))
+#Project_TDS/DL_denoising_project/audio_files/noisy_signals/train
+
+#dir_path = "/Users/leabhobot/Desktop/MVA/DL_Signal/Projet_DL_signal/Project_TDS/DL_denoising_project/audio_files"
+#noisy_dir = os.path.join(dir_path, "noisy_signals", "train")
+
+#if not os.path.exists(noisy_dir):
+#    print(f"Directory does not exist: {noisy_dir}")
+#else:
+   # print(f"Directory exists: {noisy_dir}")
+    
 # TO RUN ONCE :
 # extract_wav(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project")
-
+#extract_wav(r".")
+#/Users/leabohbot/Desktop/MVA/DL_Signal/Projet_DL_signal/Project_TDS/DL_denoising_project
 
 def generate_global_signals(dir_path, name, output_folder):
     """
@@ -64,10 +81,14 @@ def generate_global_signals(dir_path, name, output_folder):
             signals.append([noisy_signal, clean_signal])
     np.save(output_path_signals, np.array(signals))
     np.save(output_path_names,np.array(names))
+    
+
 
 # TO DO ONCE
 #generate_global_signals(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
 #generate_global_signals(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
+#generate_global_signals(r"./data/train",'train',r"./data/global")
+#generate_global_signals(r"./data/test",'test',r"./data/global")
 
 def generate_global_specto(dir_path, name, output_folder):
     """
@@ -96,9 +117,13 @@ def generate_global_specto(dir_path, name, output_folder):
 #TO DO ONCE
 #generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
 #generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
+#generate_global_specto(r"./data/train",'train', r"./data/global")
+#generate_global_specto(r"./data/test",'test',r"./data/global")
 
-specto = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global\train_spectos.npy")
+specto = np.load(r"./data/global/train_spectos.npy")
 print(specto.shape)
+
+
 
 def load_data(data_path): 
     pass

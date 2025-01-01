@@ -12,13 +12,13 @@ class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entr
         self.names = np.load(path_to_names)
 
     def __len__(self):
-        return len(self.noisy)
+        return self.spectos.shape[0]
 
     def __getitem__(self, i):
         clean_noisy = (self.spectos[i])
-        s_clean = torch.tensor((clean_noisy[1])) #Tenseur 2D : temps x frequence sur le specto [T,C]
+        s_clean = torch.tensor((clean_noisy[1])) #Tenseur 2D : temps x frequence sur le specto [T,C] = [2001, 41] normalement 
         s_noisy = torch.tensor((clean_noisy[0]))  #Tenseur 2D : temps x frequence sur le specto [T,C]
-        print(s_clean.shape)
+        #print(s_clean.shape)
         return s_noisy.type(torch.LongTensor), s_clean.type(torch.LongTensor)    
 
 # Dataset pour méthode à signaux
@@ -49,14 +49,19 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
     best_loss = float('inf')
 
     for epoch in range(opt['epochs']):
+        print(f"Epoch {epoch+1}/{opt['epochs']}")
         model.train()
         train_loss = 0.0
 
         for noisy, clean in train_loader:
-            noisy, clean = noisy.to(device), clean.to(device)
+            noisy, clean = noisy.to(device).float(), clean.to(device).float() #convert both to float
 
             optimizer.zero_grad()
-            output = model(noisy.unsqueeze(1))
+            output = model(noisy.unsqueeze(1)) #normalement, output= predicted spectro mask donc on doit le multiplier par l'input avant de calculer la loss
+            print("output.shape", output.shape)
+            print("clean.shape", clean.shape)
+            print("clean.unsqueeze(1).shape", clean.unsqueeze(1).shape)
+            print("noisy.shape", noisy.shape)
             loss = criterion(output, clean.unsqueeze(1))
             loss.backward()
             optimizer.step()
@@ -70,7 +75,7 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
 
         with torch.no_grad():
             for noisy, clean in val_loader:
-                noisy, clean = noisy.to(device), clean.to(device)
+                noisy, clean = noisy.to(device).float(), clean.to(device).float()
                 output = model(noisy.unsqueeze(1))
                 loss = criterion(output, clean.unsqueeze(1))
                 val_loss += loss.item() * noisy.size(0)
