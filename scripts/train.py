@@ -12,12 +12,12 @@ class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entr
         self.names = np.load(path_to_names)
 
     def __len__(self):
-        return self.spectos.shape[0]
+        return len(self.names)
 
     def __getitem__(self, i):
         clean_noisy = (self.spectos[i])
-        s_clean = torch.tensor((clean_noisy[1])) #Tenseur 2D : temps x frequence sur le specto [T,C] = [2001, 41] normalement 
-        s_noisy = torch.tensor((clean_noisy[0]))  #Tenseur 2D : temps x frequence sur le specto [T,C]
+        s_clean = torch.unsqueeze(torch.tensor((clean_noisy[1])),0) #Tenseur 2D : temps x frequence sur le specto [T,C] = [2001, 41] normalement 
+        s_noisy = torch.unsqueeze(torch.tensor((clean_noisy[0])),0)  #Tenseur 2D : temps x frequence sur le specto [T,C]
         #print(s_clean.shape)
         return s_noisy.type(torch.LongTensor), s_clean.type(torch.LongTensor)    
 
@@ -35,7 +35,7 @@ class SignalsDataset(Dataset):
         clean_noisy = (self.signals[i])
         clean = (clean_noisy[1])
         noisy = (clean_noisy[0])
-        return torch.tensor(noisy).type(torch.LongTensor), torch.tensor(clean).type(torch.LongTensor)    
+        return torch.tensor(noisy).type(float), torch.tensor(clean).type(float)    
 
 
 ### Création des datasets, et validation, Dataloaders
@@ -47,26 +47,21 @@ class SignalsDataset(Dataset):
 ### Entraînement du modèle
 def train_model(model, train_loader, val_loader, criterion, optimizer, device, opt):
     best_loss = float('inf')
-
     for epoch in range(opt['epochs']):
         print(f"Epoch {epoch+1}/{opt['epochs']}")
         model.train()
         train_loss = 0.0
-
-        for noisy, clean in train_loader:
-            noisy, clean = noisy.to(device).float(), clean.to(device).float() #convert both to float
-
-            optimizer.zero_grad()
-            output = model(noisy.unsqueeze(1)) #normalement, output= predicted spectro mask donc on doit le multiplier par l'input avant de calculer la loss
-            print("output.shape", output.shape)
-            print("clean.shape", clean.shape)
-            print("clean.unsqueeze(1).shape", clean.unsqueeze(1).shape)
-            print("noisy.shape", noisy.shape)
-            loss = criterion(output, clean.unsqueeze(1))
-            loss.backward()
-            optimizer.step()
-
-            train_loss += loss.item() * noisy.size(0)
+        for b_noisy, b_clean in train_loader:
+            cond = np.random.choice([0,1], p=[0.7,0.3]) # to do mini-epochs without all the data
+            if cond :
+                b_noisy, b_clean = b_noisy.to(device).float(), b_clean.to(device).float() #convert both to float
+                output = model(b_noisy) #normalement, output= predicted spectro mask donc on doit le multiplier par l'input avant de calculer la loss
+                print("ok")
+                loss = criterion(output*b_noisy, b_clean)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                train_loss += loss.item() * b_noisy.size(0)
 
         train_loss /= len(train_loader.dataset)
 
@@ -76,8 +71,8 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
         with torch.no_grad():
             for noisy, clean in val_loader:
                 noisy, clean = noisy.to(device).float(), clean.to(device).float()
-                output = model(noisy.unsqueeze(1))
-                loss = criterion(output, clean.unsqueeze(1))
+                output = model(noisy)
+                loss = criterion(output*noisy, clean)
                 val_loss += loss.item() * noisy.size(0)
 
         val_loss /= len(val_loader.dataset)
