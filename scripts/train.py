@@ -19,7 +19,7 @@ class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entr
         s_clean = torch.unsqueeze(torch.tensor((clean_noisy[1])),0) #Tenseur 2D : temps x frequence sur le specto [T,C] = [2001, 41] normalement 
         s_noisy = torch.unsqueeze(torch.tensor((clean_noisy[0])),0)  #Tenseur 2D : temps x frequence sur le specto [T,C]
         #print(s_clean.shape)
-        return s_noisy.type(torch.LongTensor), s_clean.type(torch.LongTensor)    
+        return s_noisy.type(torch.float), s_clean.type(torch.float)    
 
 # Dataset pour méthode à signaux
 class SignalsDataset(Dataset):
@@ -54,10 +54,10 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
         for b_noisy, b_clean in train_loader:
             cond = np.random.choice([0,1], p=[0.7,0.3]) # to do mini-epochs without all the data
             if cond :
-                b_noisy, b_clean = b_noisy.to(device).float(), b_clean.to(device).float() #convert both to float
+                b_noisy, b_clean = b_noisy.to(device), b_clean.to(device) #convert both to float
                 output = model(b_noisy) #normalement, output= predicted spectro mask donc on doit le multiplier par l'input avant de calculer la loss
-                print("ok")
                 loss = criterion(output*b_noisy, b_clean)
+                print("loss=",loss)
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
@@ -67,10 +67,9 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
 
         model.eval()
         val_loss = 0.0
-
         with torch.no_grad():
             for noisy, clean in val_loader:
-                noisy, clean = noisy.to(device).float(), clean.to(device).float()
+                noisy, clean = noisy.to(device), clean.to(device)
                 output = model(noisy)
                 loss = criterion(output*noisy, clean)
                 val_loss += loss.item() * noisy.size(0)
