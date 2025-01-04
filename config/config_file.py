@@ -1,14 +1,23 @@
 # to put in a config file 
 config = {}
 
-opt = {
+test = {
     'batch_size': 6,
     'epochs': 1, #100 , #1 for testing
     'learning_rate': 1e-3,
     'data_dir': './data',
-    'model_save_path': './checkpoints/unet_model.pth',
+    'model_save_path': './checkpoints/test.pt',
     'model_type': 'resunet',  # Options: 'unet', 'resunet'
-    'input_shape': (512, 128)  # Shape of the spectrogram input (height, width)
+}
+
+opt = {
+    'batch_size': 8,
+    'epochs': 3, #100 , #1 for testing
+    'learning_rate': 1e-3,
+    'data_dir': './data',
+    'model_save_path': './checkpoints/resunet_model.pt',
+    'model_type': 'resunet',  
 }
 
 config['opt'] = opt
+config['test'] = test
