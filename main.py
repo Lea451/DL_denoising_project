@@ -55,7 +55,7 @@ def main():
     train_dataloader = DataLoader(train_dataset, batch_size=opt['batch_size'], shuffle=True)
     test_dataloader = DataLoader(test_dataset, batch_size=20, shuffle=False)
     valid_dataloader = DataLoader(valid_dataset, batch_size=20, shuffle=False)
-
+    
     # Initialize model
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -66,7 +66,8 @@ def main():
     else:
         raise ValueError("Invalid model type specified in config.")
 
-    criterion = torch.nn.MSELoss()
+    #criterion = torch.nn.MSELoss()
+    criterion = train.s_loss_1
     optimizer = torch.optim.Adam(model.parameters(), lr=opt['learning_rate'])
 
     # Load checkpoint if specified

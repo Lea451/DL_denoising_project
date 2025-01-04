@@ -37,6 +37,22 @@ class SignalsDataset(Dataset):
         noisy = (clean_noisy[0])
         return torch.tensor(noisy).type(float), torch.tensor(clean).type(float)    
 
+class SLoss_1(nn.Module):
+    def __init__(self, weight):
+        super(SLoss_1, self).__init__()
+        self.weight = weight
+
+    def forward(self, input, target):
+        # Compute the loss
+        loss = torch.mean(self.weight * (input - target) ** 2)
+        return loss
+
+
+def s_loss_1(specto_1, specto_2):
+    somme =  torch.sum(10*torch.abs(torch.log(specto_1)-torch.log(specto_2)))
+    somme /= torch.numel(specto_1)
+    return somme
+
 
 ### Création des datasets, et validation, Dataloaders
 
@@ -52,11 +68,11 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
         model.train()
         train_loss = 0.0
         for b_noisy, b_clean in train_loader:
-            cond = np.random.choice([0,1], p=[0.7,0.3]) # to do mini-epochs without all the data
+            cond = np.random.choice([0,1], p=[0.6,0.4]) # to do mini-epochs without all the data
             if cond :
                 b_noisy, b_clean = b_noisy.to(device), b_clean.to(device) #convert both to float
                 output = model(b_noisy) #normalement, output= predicted spectro mask donc on doit le multiplier par l'input avant de calculer la loss
-                loss = criterion(output*b_noisy, b_clean)
+                loss = s_loss_1(output*b_noisy, b_clean)
                 print("loss=",loss)
                 optimizer.zero_grad()
                 loss.backward()
@@ -73,7 +89,6 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
                 output = model(noisy)
                 loss = criterion(output*noisy, clean)
                 val_loss += loss.item() * noisy.size(0)
-
         val_loss /= len(val_loader.dataset)
 
         print(f"Epoch {epoch+1}/{opt['epochs']}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")

@@ -62,12 +62,10 @@ noisy_phases = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_
 #masks_to_signals(masks, noisy_spectos, noisy_phases, r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\postprocessing\results","test")
 denoised = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\postprocessing\results\test_denoised.npy")
 
-print(denoised.shape)
 names = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global\test_names.npy")
 for i in range(10):
    file_name =  names[i] +'_denoised.wav'
    signal = denoised[i]/np.max(np.abs(denoised[i]))
    scaled = np.int16(signal* 32767)
-
    scipy.io.wavfile.write(filename=file_name,rate=s_r,data=scaled)
    

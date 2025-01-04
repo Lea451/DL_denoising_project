@@ -125,8 +125,8 @@ def generate_global_specto(dir_path, name, output_folder):
 #TO DO ONCE
 #generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
 #generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
-generate_global_specto(r"./data/train",'train', r"./data/global")
-generate_global_specto(r"./data/test",'test',r"./data/global")
+#generate_global_specto(r"./data/train",'train', r"./data/global")
+#generate_global_specto(r"./data/test",'test',r"./data/global")
 
 
 
