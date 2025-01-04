@@ -66,7 +66,8 @@ class DecoderBlock(nn.Module):
 class ResUnet(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(ResUnet, self).__init__()
-
+        #Sigmoid
+        self.sigmo = nn.Sigmoid()
         # Encoder
         self.encoder1 = EncoderBlock(in_channels, 64)
         self.encoder2 = EncoderBlock(64, 128)
@@ -100,8 +101,8 @@ class ResUnet(nn.Module):
         dec3 = self.decoder3(dec4, skip3)
         dec2 = self.decoder2(dec3, skip2)
         dec1 = self.decoder1(dec2, skip1)
-
-        # Final convolution
-        out = self.final_conv(dec1)
+        
+        # Final convolution and sigmoide
+        out = self.sigmo(self.final_conv(dec1))
         return out
 

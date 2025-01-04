@@ -27,7 +27,7 @@ def model_evaluate(model, output_path):
         for noisy, clean in test_dataloader:
           noisy, clean = noisy.to(device), clean.to(device)
           output = model(noisy).cpu()
-          mask = np.array(output.squeeze(0))
+          mask = (output.squeeze(0))
           masks.append(mask)
           print(output.shape, mask.shape)
     np.save(output_path, masks)

@@ -7,6 +7,7 @@ import torch.utils.data
 from torch.utils.data import DataLoader
 from models.ResUnet import ResUnet
 from scripts import train
+from sklearn.metrics import mean_squared_log_error
 
 # Argument parser
 parser = argparse.ArgumentParser()
@@ -67,7 +68,7 @@ def main():
         raise ValueError("Invalid model type specified in config.")
 
     #criterion = torch.nn.MSELoss()
-    criterion = train.s_loss_1
+    criterion = train.RMSLELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=opt['learning_rate'])
 
     # Load checkpoint if specified
