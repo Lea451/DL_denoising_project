@@ -3,6 +3,7 @@ import torch.nn as nn
 import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader, Dataset
+import tqdm
 
 
 ### Dataset pour méthode à spectogrammes
@@ -67,7 +68,7 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
         print(f"Epoch {epoch+1}/{opt['epochs']}")
         model.train()
         train_loss = 0.0
-        for b_noisy, b_clean in train_loader:
+        for b_noisy, b_clean in tqdm.tqdm(train_loader, desc=f"Epoch {epoch + 1}/{opt['epochs']} - Training"):
             cond = np.random.choice([0,1], p=[0.6,0.4]) # to do mini-epochs without all the data
             if cond :
                 b_noisy, b_clean = b_noisy.to(device), b_clean.to(device) #convert both to float
@@ -84,7 +85,7 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
         model.eval()
         val_loss = 0.0
         with torch.no_grad():
-            for noisy, clean in val_loader:
+            for noisy, clean in tqdm.tqdm(val_loader, desc=f"Epoch {epoch + 1}/{opt['epochs']} - Training"):
                 noisy, clean = noisy.to(device), clean.to(device)
                 output = model(noisy)
                 loss = criterion(output*noisy, clean)
