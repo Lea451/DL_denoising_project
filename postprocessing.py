@@ -1,4 +1,3 @@
-
 import os
 import soundfile as sf
 import scipy.signal as ss
@@ -13,8 +12,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 s_r = 8000
+
 modele = ResUnet(1,1).to(device)
-modele.load_state_dict(torch.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\checkpoints\resunet_model.pt"))
+modele.load_state_dict(torch.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\checkpoints\resunet_model1.pt"))
 modele.eval()
 path_test = r"./data/global/test_spectos.npy"
 path_test_names = r"./data/global/test_names.npy"
@@ -28,8 +28,10 @@ def model_evaluate(model, output_path):
           noisy, clean = noisy.to(device), clean.to(device)
           output = model(noisy).cpu()
           mask = (output.squeeze(0))
+          mask = np.array(mask.squeeze(0))
           masks.append(mask)
-          print(output.shape, mask.shape)
+    masks = np.array(masks)
+    print(masks.shape)
     np.save(output_path, masks)
 
 output_path = r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\postprocessing\results\test_masks.npy"
@@ -50,11 +52,11 @@ def masks_to_signals(masks, noisy_spectos, noisy_phases, output_dir, name):
     for i in range(len(masks)):
       new_specto = masks[i]*noisy_spectos[i][0]*np.exp(1j*noisy_phases[i])
       t, signal = ss.istft(new_specto)
-      signals.append(signal[0])
+      print(signal.shape)
+      signals.append(signal)
     output_path = os.path.join(output_dir,name+'_denoised.npy')
     print("Saving denoised signals...")
     np.save(output_path, np.array(signals))
-    print(np.array(signal).shape)
 
 masks = np.load(output_path)
 noisy_spectos = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global\test_spectos.npy")
@@ -66,6 +68,6 @@ names = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoisi
 for i in range(10):
    file_name =  names[i] +'_denoised.wav'
    signal = denoised[i]/np.max(np.abs(denoised[i]))
-   scaled = np.int16(signal* 32767)
+   scaled = np.float32(signal)
    scipy.io.wavfile.write(filename=file_name,rate=s_r,data=scaled)
    

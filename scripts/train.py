@@ -83,7 +83,7 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, device, o
 
         print(f"Epoch {epoch+1}/{opt['epochs']}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
 
-        if val_loss < best_loss:
+        if val_loss <= best_loss:
             best_loss = val_loss
             torch.save(model.state_dict(), opt['model_save_path'])
             print(f"Model saved with Val Loss: {best_loss:.4f}")

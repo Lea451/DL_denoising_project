@@ -39,7 +39,7 @@ path_test_names = r"./data/global/test_names.npy"
 #path_test = r"\data\global\test_spectos.npy"
 #path_test_names = r"\data\global\test_names.npy"
 
-torch.manual_seed(172)
+torch.manual_seed(15)
 
 
 # Main logic
@@ -47,7 +47,7 @@ def main():
     # Load data + create datasets + create dataloaders
     train_full = train.SpectrogramDataset(path_to_signals=path_train, path_to_names=path_train_names)
     test_dataset = train.SpectrogramDataset(path_to_signals=path_test, path_to_names=path_test_names)
-    train_dataset, valid_dataset = torch.utils.data.random_split(train_full, [0.85, 0.15])
+    train_dataset, valid_dataset = torch.utils.data.random_split(train_full, [0.75, 0.25])
     
     #print("len(train_dataset)", len(train_dataset))
     #print("len(valid_dataset)", len(valid_dataset))
