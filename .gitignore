@@ -10,11 +10,9 @@ __pycache__/
 data/noisy_signals/*
 data/clean_signals/*
 
-# Ignore model files
-models/*.h5
 
-# Ignore Jupyter checkpoints
-*.ipynb_checkpoints
+# Ignore  checkpoints/models
+*.pt
 
 # Ignore .npy
 *.npy

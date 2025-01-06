@@ -27,7 +27,7 @@ def extract_wav(project_path) :
     
     You need to rename voice_origin as "clean_signals" and to put 
     the noisy signals in a folder "noisy_signals"
-    These two folders are just in the folder /audio/
+    These two folders are just in the folder /audio_files/
     
     """
     folder = [r'train', r'test']
@@ -47,9 +47,9 @@ def extract_wav(project_path) :
 
 def generate_global_signals(dir_path, name, output_folder):
     """
-    Input : directory path (in which two subdirectories 'train' and 'test'), 
+    Input : data directory path (in which two subdirectories 'train' and 'test'), 
             name of the output file
-    Output : one torch tensors, one array
+     2 arrays are saved in output_folder
         signals = array with all [noisy signal, clean signal]
         names = array with the names
     """
@@ -80,8 +80,8 @@ def generate_global_signals(dir_path, name, output_folder):
 
 # TO DO ONCE
 
-generate_global_signals("./train",'train',"./global")
-generate_global_signals("./test",'test',"./global")
+#generate_global_signals(r"..\data",'train',r"./global")
+#generate_global_signals("./test",'test',"./global")
 
 
 
@@ -119,8 +119,36 @@ def generate_global_specto(dir_path, name, output_folder):
     print(f"Phases saved at: {output_path_phases}")
 
 #TO DO ONCE
-generate_global_specto("./train",'train', "./global")
-generate_global_specto("./test",'test',"./global")
+#generate_global_specto(r"../data/",'train', r"./global")
+#generate_global_specto(".\test",'test',"./global")
 
+def compute_snr(denoised, signals, output_dir, name, boo=True ):
+    """
+    Input : 2 arrays
+        denoised = denoised signals
+        signals = array of [noisy_signal, clean_signal]
+        output_dir = path of the output dir
+        name = name for the file
+        boo : boolean, if False compute the snr of noisy_signals (and the array denoised does not matter)
+    Save an .npy array with snr (10log(|signal|**2/|noise|^2))
+    """
+    snr = []
+    for i in range(len(signals)):
+        signal = signals[i][0]
+        clean = signals[i][1]
+        if boo :
+            signal = denoised[i]
+        n1 = np.sum(np.abs(clean*clean))
+        n2 = np.sum(np.abs((clean-signal)*(clean-signal)))
+        if n2 != 0 : snr.append(20*np.log10(n1/n2))
+        else : snr.append(np.infty)
+    snr = np.array(snr)
+    output_path = os.path.join(output_dir, name+'_snr.npy')
+    np.save(output_path,snr)
+    print('SNRs saved')
 
+output_dir = r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\dl\DL_denoising_project\data\global"
+signals = np.load(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\dl\DL_denoising_project\data\global\test_signals.npy")
+
+compute_snr([None], signals,output_dir,'test', boo=False)
 
