@@ -1,108 +1,43 @@
+import os
 import torch
-import torch.nn as nn
 import numpy as np
-import torch.optim as optim
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import Dataset
+import torch.nn as nn
+import matplotlib.pyplot as plt
 import tqdm
 
 
+
 ### Dataset pour méthode à spectogrammes
-#class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entrée
-#    def __init__(self, path_to_signals, path_to_names):
-#        self.spectos = np.load(path_to_signals)
-#        self.names = np.load(path_to_names)
-
-#    def __len__(self):
-#        return len(self.names)
-
-#    def __getitem__(self, i):
-#        clean_noisy = (self.spectos[i])
- #       s_clean = torch.unsqueeze(torch.tensor((clean_noisy[1])),0) #Tenseur 2D : temps x frequence sur le specto [T,C] = [2001, 41] normalement 
-#       s_noisy = torch.unsqueeze(torch.tensor((clean_noisy[0])),0)  #Tenseur 2D : temps x frequence sur le specto [T,C]
- #       #print(s_clean.shape)
-#        return s_noisy.type(torch.float), s_clean.type(torch.float) 
-
-
-# Normalization and denormalization functions
-def normalize_spectrogram(spectrogram):
-    """
-    Normalize a spectrogram by applying log transformation followed by min-max normalization.
-    """
-    spectrogram_log = np.log(np.abs(spectrogram) + 1e-10)  # Avoid log(0) by adding a small epsilon
-    spectrogram_min = spectrogram_log.min()
-    spectrogram_max = spectrogram_log.max()
-    normalized_spectrogram = (spectrogram_log - spectrogram_min) / (spectrogram_max - spectrogram_min)
-    return normalized_spectrogram, spectrogram_min, spectrogram_max
-
-def denormalize_spectrogram(normalized_spectrogram, spectrogram_min, spectrogram_max):
-    """
-    Denormalize a spectrogram back to its original scale.
-    """
-    spectrogram_log = (normalized_spectrogram * (spectrogram_max - spectrogram_min)) + spectrogram_min
-    spectrogram = np.exp(spectrogram_log) - 1e-10 # Reverse the log transformation
-    return spectrogram
-
-# Dataset class with normalization integrated
-class SpectrogramDataset(Dataset):  # suppose qu'on met les spectrogrammes en entrée
+class SpectrogramDataset(Dataset): #suppose qu'on met les spectrogrammes en entrée
     def __init__(self, path_to_signals, path_to_names):
         self.spectos = np.load(path_to_signals)
         self.names = np.load(path_to_names)
-        self.normalization_params = []  # Store min and max for each spectrogram
-
-        # Normalize spectrograms
-        normalized_spectos = []
-        for noisy, clean in self.spectos:
-            noisy_norm, noisy_min, noisy_max = normalize_spectrogram(noisy)
-            clean_norm, clean_min, clean_max = normalize_spectrogram(clean)
-            normalized_spectos.append([noisy_norm, clean_norm])
-            self.normalization_params.append([(noisy_min, noisy_max), (clean_min, clean_max)])
-        self.spectos_norm = np.array(normalized_spectos)
 
     def __len__(self):
         return len(self.names)
 
     def __getitem__(self, i):
-        clean_noisy = self.spectos_norm[i]
-        s_clean = torch.unsqueeze(torch.tensor((clean_noisy[1])), 0)  # Tenseur 2D : temps x frequence sur le specto [T,C] = [2001, 41] normalement
-        s_noisy = torch.unsqueeze(torch.tensor((clean_noisy[0])), 0)  # Tenseur 2D : temps x frequence sur le specto [T,C]
-        return s_noisy.type(torch.float), s_clean.type(torch.float), self.normalization_params[i]  # Include normalization params
+        clean_noisy = (self.spectos[i])
+        s_clean = torch.unsqueeze(torch.tensor((clean_noisy[1])),0) #Tenseur 2D : temps x frequence sur le specto [T,C] = [2001, 41] normalement 
+        s_noisy = torch.unsqueeze(torch.tensor((clean_noisy[0])),0)  #Tenseur 2D : temps x frequence sur le specto [T,C]
+        print(s_clean.shape)
+        return s_noisy.type(torch.float), s_clean.type(torch.float) 
 
-# Example usage
-# dataset = SpectrogramDataset('path_to_original_data.npy', 'path_to_names.npy')
-
-   
-
-# Dataset pour méthode à signaux
-class SignalsDataset(Dataset):
-    def __init__(self, path_to_signals, path_to_names):  #charge les signaux (par paires bruité / non bruités)
-        self.signals = np.load(path_to_signals)
-        self.names = np.load(path_to_names)
-        
-    def __len__(self): #retourne le nombre de signaux dans le dataset
-        return self.signals.shape[0]
-    
-        
-    def __getitem__(self,i): #retourne pour chaque indice i un couple (data_i, label_i), data_i étant un signal et label_i le label associé au signal
-        clean_noisy = (self.signals[i])
-        clean = (clean_noisy[1])
-        noisy = (clean_noisy[0])
-        return torch.tensor(noisy).type(float), torch.tensor(clean).type(float)    
-
-class SLoss_1(nn.Module):
-    def __init__(self, weight):
-        super(SLoss_1, self).__init__()
-        self.weight = weight
-
-    def forward(self, input, target):
-        # Compute the loss
-        loss = torch.mean(self.weight * (input - target) ** 2)
-        return loss
 
 
 def s_loss_1(specto_1, specto_2):
     somme =  torch.sum(10*torch.abs(torch.log(specto_1)-torch.log(specto_2)))
     somme /= torch.numel(specto_1)
     return somme
+
+class MSLELoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.mse = nn.MSELoss()
+        
+    def forward(self, pred, actual):
+        return (self.mse(torch.log((pred) + 10e-7), torch.log(actual + 10e-7)))
 
 
 ### Création des datasets, et validation, Dataloaders
@@ -166,3 +101,69 @@ def plot_losses(train_losses, val_losses):
     plt.ylabel('Loss')
     plt.legend()
     plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## NOT USED
+# Normalization and denormalization functions
+def normalize_spectrogram(spectrogram):
+    """
+    Normalize a spectrogram by applying log transformation followed by min-max normalization.
+    """
+    spectrogram_log = np.log(np.abs(spectrogram) + 1e-10)  # Avoid log(0) by adding a small epsilon
+    spectrogram_min = spectrogram_log.min()
+    spectrogram_max = spectrogram_log.max()
+    normalized_spectrogram = (spectrogram_log - spectrogram_min) / (spectrogram_max - spectrogram_min)
+    return normalized_spectrogram, spectrogram_min, spectrogram_max
+
+def denormalize_spectrogram(normalized_spectrogram, spectrogram_min, spectrogram_max):
+    """
+    Denormalize a spectrogram back to its original scale.
+    """
+    spectrogram_log = (normalized_spectrogram * (spectrogram_max - spectrogram_min)) + spectrogram_min
+    spectrogram = np.exp(spectrogram_log) - 1e-10 # Reverse the log transformation
+    return spectrogram
+
+
+# Dataset class with normalization integrated  
+class NotUsedSpectrogramDataset(Dataset):  # suppose qu'on met les spectrogrammes en entrée
+    def __init__(self, path_to_signals, path_to_names):
+        self.spectos = np.load(path_to_signals)
+        self.names = np.load(path_to_names)
+        self.normalization_params = []  # Store min and max for each spectrogram
+
+        # Normalize spectrograms
+        normalized_spectos = []
+        for noisy, clean in self.spectos:
+            noisy_norm, noisy_min, noisy_max = normalize_spectrogram(noisy)
+            clean_norm, clean_min, clean_max = normalize_spectrogram(clean)
+            normalized_spectos.append([noisy_norm, clean_norm])
+            self.normalization_params.append([(noisy_min, noisy_max), (clean_min, clean_max)])
+        self.spectos_norm = np.array(normalized_spectos)
+
+    def __len__(self):
+        return len(self.names)
+
+    def __getitem__(self, i):
+        clean_noisy = self.spectos_norm[i]
+        s_clean = torch.unsqueeze(torch.tensor((clean_noisy[1])), 0)  # Tenseur 2D : temps x frequence sur le specto [T,C] = [2001, 41] normalement
+        s_noisy = torch.unsqueeze(torch.tensor((clean_noisy[0])), 0)  # Tenseur 2D : temps x frequence sur le specto [T,C]
+        return s_noisy.type(torch.float), s_clean.type(torch.float), self.normalization_params[i]  # Include normalization params
+
+# Example usage
+# dataset = SpectrogramDataset('path_to_original_data.npy', 'path_to_names.npy')

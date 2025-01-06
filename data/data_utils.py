@@ -39,17 +39,6 @@ def extract_wav(project_path) :
             output_dir = os.path.join(project_path, r'data', word_1, word_2)
             wav_to_npy(audio_dir,output_dir)
 
-
-#python print(os.listdir(r"./audio_files/noisy_signals/train"))
-#Project_TDS/DL_denoising_project/audio_files/noisy_signals/train
-
-#dir_path = "/Users/leabhobot/Desktop/MVA/DL_Signal/Projet_DL_signal/Project_TDS/DL_denoising_project/audio_files"
-#noisy_dir = os.path.join(dir_path, "noisy_signals", "train")
-
-#if not os.path.exists(noisy_dir):
-#    print(f"Directory does not exist: {noisy_dir}")
-#else:
-   # print(f"Directory exists: {noisy_dir}")
     
 # TO RUN ONCE :
 # extract_wav(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project")
@@ -90,10 +79,9 @@ def generate_global_signals(dir_path, name, output_folder):
 
 
 # TO DO ONCE
-#generate_global_signals(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
-#generate_global_signals(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
-#generate_global_signals("./data/train",'train',"./data/global")
-generate_global_signals("./data/test",'test',"./data/global")
+
+generate_global_signals("./train",'train',"./global")
+generate_global_signals("./test",'test',"./global")
 
 
 
@@ -130,16 +118,9 @@ def generate_global_specto(dir_path, name, output_folder):
     print(f"Spectrograms saved at: {output_path_spectos}")
     print(f"Phases saved at: {output_path_phases}")
 
-# Example Usage
-#generate_global_specto("./data/train", "train", "./data/global")
-#generate_global_specto("./data/test", "test", "./data/global")
-
-    
 #TO DO ONCE
-#generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\train",'train',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
-#generate_global_specto(r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\test",'test',r"C:\Users\valen\Documents\Travail\X\MVA\S1\ProjetTDS\DL_denoising_project\data\global")
-generate_global_specto("./data/train",'train', "./data/global")
-generate_global_specto("./data/test",'test',"./data/global")
+generate_global_specto("./train",'train', "./global")
+generate_global_specto("./test",'test',"./global")
 
 
 
