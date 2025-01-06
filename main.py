@@ -35,12 +35,8 @@ path_train = r"./data/global/train_spectos.npy"
 path_train_names = r"./data/global/train_names.npy"
 path_test = r"./data/global/test_spectos.npy"
 path_test_names = r"./data/global/test_names.npy"
-#path_train = r"\data\global\train_spectos.npy"
-#path_train_names = r"\data\global\train_names.npy"
-#path_test = r"\data\global\test_spectos.npy"
-#path_test_names = r"\data\global\test_names.npy"
 
-torch.manual_seed(172)
+torch.manual_seed(16)
 
 
 # Main logic
@@ -48,24 +44,23 @@ def main():
     # Load data + create datasets + create dataloaders
     train_full = train.SpectrogramDataset(path_to_signals=path_train, path_to_names=path_train_names)
     test_dataset = train.SpectrogramDataset(path_to_signals=path_test, path_to_names=path_test_names)
-    train_dataset, valid_dataset = torch.utils.data.random_split(train_full, [int(0.85 * len(train_full)), len(train_full) - int(0.85 * len(train_full))])
+    train_dataset, valid_dataset = torch.utils.data.random_split(train_full,[0.75, 0.25])
     
     train_dataloader = DataLoader(train_dataset, batch_size=opt['batch_size'], shuffle=True)
-    test_dataloader = DataLoader(test_dataset, batch_size=20, shuffle=False)
-    valid_dataloader = DataLoader(valid_dataset, batch_size=20, shuffle=False)
+    test_dataloader = DataLoader(test_dataset, batch_size=10, shuffle=False)
+    valid_dataloader = DataLoader(valid_dataset, batch_size=10, shuffle=False)
     
     # Initialize model
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    if opt['model_type'] == 'unet':
-        model = UNet(in_channels=1, out_channels=1).to(device)
-    elif opt['model_type'] == 'resunet':
+    if opt['model_type'] == 'resunet':
         model = ResUnet(in_channels=1, out_channels=1).to(device)
     else:
         raise ValueError("Invalid model type specified in config.")
 
     # Criterion and optimizer
     criterion = train.s_loss_1
+    
     optimizer = torch.optim.Adam(model.parameters(), lr=opt['learning_rate'])
 
     # Load checkpoint if specified
@@ -81,10 +76,10 @@ def main():
         print("Starting evaluation...")
         # Call evaluation function
         output_path = os.path.join('./postprocessing/results', 'test_masks.npy')
-        model_evaluate(model, test_dataloader, output_path)
+        model_evaluate(model, test_dataloader, output_path)  #sauve les masques
 
         # Convert masks to signals
-        noisy_spectos = np.load(path_test) # this specto is not normalized
+        spectos = np.load(path_test) 
         noisy_phases = np.load("./data/global/test_phases.npy")
         masks= np.load(output_path, allow_pickle=True)
 
@@ -93,16 +88,7 @@ def main():
         os.makedirs(output_dir, exist_ok=True)
 
         # Save denoised signals
-        masks_to_signals(masks, noisy_spectos, noisy_phases, output_dir, 'test')
-
-        # Save the denoised audio files
-        denoised = np.load(os.path.join(output_dir, 'test_denoised.npy'))
-        #names = np.load(path_test_names)
-        #for i in range(len(names)):
-        #    file_name = os.path.join(output_dir, names[i] + '_denoised.wav')
-        #    signal = denoised[i] / np.max(np.abs(denoised[i]))
-        #    scaled = np.int16(signal * 32767)
-        #    scipy.io.wavfile.write(filename=file_name, rate=s_r, data=scaled)
+        masks_to_signals(masks, spectos, noisy_phases, output_dir, 'test')
 
         print(f"Evaluation completed. Results saved in {output_dir}")
 
