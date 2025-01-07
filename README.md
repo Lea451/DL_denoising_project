@@ -52,7 +52,7 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 
 ### Visualisation des formes d'ondes
 
-![Formes d'ondes des modèles](path_to_clean_signal_plot.png) 
+![Formes d'ondes des modèles](notebooks/Audio_exemples/plot.png) 
 
 ### Comparaisons audio
 - [Écouter le signal propre (143)](notebooks/Audio_exemples/143_clean.wav)
@@ -76,14 +76,7 @@ Explorez les notebooks dans `notebooks/` pour visualiser les résultats, spectro
 
 ---
 
-### Comment ajouter des graphiques et des audios
-1. **Ajouter des graphiques** : Sauvegardez les graphiques générés sous forme de fichiers `.png` dans un répertoire (ex. : `notebooks/plots/`). Référencez-les dans le README en utilisant :
-   ```markdown
-   ![Description du graphique](path_to_plot.png)
-   ```
-2. **Intégrer des audios** : Sauvegardez les fichiers audio au format `.wav` dans un répertoire (ex. : `audio_files/results/`) et liez-les avec :
-   ```markdown
-   [Écouter la description audio](path_to_audio.wav)
+
    ```
 
 ---
