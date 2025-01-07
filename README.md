@@ -52,7 +52,7 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 
 ### Visualisation des formes d'ondes
 
-![Formes d'ondes des modèles](notebooks/Audio_exemples/plot.png) 
+![Formes d'ondes des modèles](notebooks/plot.png) 
 
 ### Comparaisons audio
 - [Écouter le signal propre (143)](notebooks/Audio_exemples/143_clean.wav)
