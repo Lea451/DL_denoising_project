@@ -16,6 +16,7 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 | `data/`                    | Contient les fichiers `.npy` générés à partir des signaux audio.                                                                                              |
 | `models/`                  | Implémente l'architecture ResUnet et les modèles associés.                                                                                                           |
 | `notebooks/`               | Notebooks Jupyter présentant les résultats, visualisations et évaluations des signaux débruités.                                                             |
+| `notebooks/Audio - exemples/` | Contient les fichiers audio d'exemple pour comparer les signaux propres, bruités et débruités.                                                                     |
 | `scripts/`                 | Contient les scripts Python pour la préparation des données, l'entraînement et les tests.                                                                               |
 | `tests/`                   | Scripts pour les tests unitaires de différentes parties du code.                                                                                                               |
 | `compare_signals.py`       | Script pour comparer les signaux originaux et débruités, et calculer les métriques d'évaluation (ex. : STOI).                                                       |
@@ -42,7 +43,7 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 ### Tests
 1. Testez un modèle entraîné avec :
    ```bash
-   python main.py --exp='config_file' --evaluate=True --directory='./checkpoints/resnet_model.pt'
+   python main.py --exp='config_file' --evaluate=True --directory='(chemin vers le modèle)'
    ```
 
 ---
@@ -56,9 +57,15 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 | ![Spectrogramme propre](path_to_clean_signal_plot.png) | ![Spectrogramme bruité](path_to_noisy_signal_plot.png) | ![Spectrogramme débruité](path_to_denoised_signal_plot.png) |
 
 ### Comparaisons audio
-- [Écouter le signal propre](path_to_clean_signal.wav)
-- [Écouter le signal bruité](path_to_noisy_signal.wav)
-- [Écouter le signal débruité](path_to_denoised_signal.wav)
+- [Écouter le signal propre (143)](notebooks/Audio - exemples/143_clean.wav)
+- [Écouter le signal bruité (143)](notebooks/Audio - exemples/143_noisy.wav)
+- [Écouter le signal débruité (modèle 1 - 143)](notebooks/Audio - exemples/143_denoised_1.wav)
+- [Écouter le signal débruité (modèle 2 - 143)](notebooks/Audio - exemples/143_denoised_2.wav)
+
+- [Écouter le signal propre (748)](notebooks/Audio - exemples/748_clean.wav)
+- [Écouter le signal bruité (748)](notebooks/Audio - exemples/748_noisy.wav)
+- [Écouter le signal débruité (modèle 1 - 748)](notebooks/Audio - exemples/748_denoised1.wav)
+- [Écouter le signal débruité (modèle 2 - 748)](notebooks/Audio - exemples/748_denoised2.wav)
 
 ### Métriques
 - **STOI :** 0.95
