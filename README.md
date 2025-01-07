@@ -42,7 +42,7 @@ This project implements a **ResUnet architecture** for denoising audio signals, 
 ### Testing
 1. Test a trained model with:
    ```bash
-   python main.py --exp='config_file' --evaluate=True --directory='(path to model)'
+   python main.py --exp='config_file' --evaluate=True --directory='./checkpoints/resnet_model.pt'
    ```
 
 ---
