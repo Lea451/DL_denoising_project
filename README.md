@@ -24,6 +24,6 @@ It calls the functions of *postprocessing.py*
 
 ### Notebook
 
-One notebook (Example) presenting some results with two different models : how look denoised signals and spectrogam, the stoi associated... 
+One notebook (Example) presenting some results with two different models : how look denoised signals and spectrogam, the stoi associated... There are also two examples of denoising (.wav) in the folder.
 
 
