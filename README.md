@@ -57,15 +57,15 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 | ![Spectrogramme propre](path_to_clean_signal_plot.png) | ![Spectrogramme bruité](path_to_noisy_signal_plot.png) | ![Spectrogramme débruité](path_to_denoised_signal_plot.png) |
 
 ### Comparaisons audio
-- [Écouter le signal propre (143)](notebooks/Audio - exemples/143_clean.wav)
-- [Écouter le signal bruité (143)](notebooks/Audio - exemples/143_noisy.wav)
-- [Écouter le signal débruité (modèle 1 - 143)](notebooks/Audio - exemples/143_denoised_1.wav)
-- [Écouter le signal débruité (modèle 2 - 143)](notebooks/Audio - exemples/143_denoised_2.wav)
+- [Écouter le signal propre (143)](notebooks/Audio_exemples/143_clean.wav)
+- [Écouter le signal bruité (143)](notebooks/Audio_exemples/143_noisy.wav)
+- [Écouter le signal débruité (modèle 1 - 143)](notebooks/Audio_exemples/143_denoised_1.wav)
+- [Écouter le signal débruité (modèle 2 - 143)](notebooks/Audio_exemples/143_denoised_2.wav)
 
-- [Écouter le signal propre (748)](notebooks/Audio - exemples/748_clean.wav)
-- [Écouter le signal bruité (748)](notebooks/Audio - exemples/748_noisy.wav)
-- [Écouter le signal débruité (modèle 1 - 748)](notebooks/Audio - exemples/748_denoised1.wav)
-- [Écouter le signal débruité (modèle 2 - 748)](notebooks/Audio - exemples/748_denoised2.wav)
+- [Écouter le signal propre (748)](notebooks/Audio_exemples/748_clean.wav)
+- [Écouter le signal bruité (748)](notebooks/Audio_exemples/748_noisy.wav)
+- [Écouter le signal débruité (modèle 1 - 748)](notebooks/Audio_exemples/748_denoised1.wav)
+- [Écouter le signal débruité (modèle 2 - 748)](notebooks/Audio_exemples/748_denoised2.wav)
 
 ### Métriques
 - **STOI :** 0.95
