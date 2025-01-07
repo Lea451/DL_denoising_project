@@ -42,7 +42,7 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 ### Tests
 1. Testez un modèle entraîné avec :
    ```bash
-   python main.py --exp='config_file' --evaluate=True --directory='(chemin vers le modèle)'
+   python main.py --exp='config_file' --evaluate=True --directory='./checkpoints/resnet_model.pt'
    ```
 
 ---
@@ -61,8 +61,8 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 - [Écouter le signal débruité](path_to_denoised_signal.wav)
 
 ### Métriques
-- **STOI :** 0.92
-- **PESQ :** 3.1
+- **STOI :** 0.95
+- **PESQ :** 2.7
 
 ---
 
