@@ -50,11 +50,9 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 
 ## Résultats
 
-### Visualisation des spectrogrammes
+### Visualisation des formes d'ondes
 
-| **Signal propre**           | **Signal bruité**          | **Signal débruité**          |
-|-----------------------------|----------------------------|--------------------------------|
-| ![Spectrogramme propre](path_to_clean_signal_plot.png) | ![Spectrogramme bruité](path_to_noisy_signal_plot.png) | ![Spectrogramme débruité](path_to_denoised_signal_plot.png) |
+![Formes d'ondes des modèles](path_to_clean_signal_plot.png) 
 
 ### Comparaisons audio
 - [Écouter le signal propre (143)](notebooks/Audio_exemples/143_clean.wav)
