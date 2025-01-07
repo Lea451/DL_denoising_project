@@ -19,8 +19,11 @@ Then, you need to run data_utils to generate all useful .npy from the audio file
 
 ### Test
 
+Similarly, you can test a model with **python main.py --exp='config_file' --evaluate=True --directory='(path of the model)'**.
+It calls the functions of *postprocessing.py*
+
 ### Notebook
 
-One notebook 
+One notebook (Example) presenting some results with two different models : how look denoised signals and spectrogam, the stoi associated... 
 
 
