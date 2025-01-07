@@ -61,8 +61,8 @@ This project implements a **ResUnet architecture** for denoising audio signals, 
 - [Play Denoised Signal](path_to_denoised_signal.wav)
 
 ### Metrics
-- **STOI:** 0.92
-- **PESQ:** 3.1
+- **STOI:** 0.95
+- **PESQ:** 2.7 
 
 ---
 
