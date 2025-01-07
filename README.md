@@ -72,7 +72,7 @@ Ce projet implémente une **architecture ResUnet** pour débruiter des signaux a
 ---
 
 ## Notebooks
-Explorez les notebooks dans `notebooks/` pour visualiser les résultats, spectrogrammes et métriques d'évaluation.
+Explorez le notebook "Example.ipynb" dans `notebooks/` pour visualiser les résultats, spectrogrammes et métriques d'évaluation ainsi que l'ensemble de nos commentaires.
 
 ---
 
