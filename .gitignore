@@ -1,5 +1,6 @@
 # Ignore audio files
-*.wav
+audio_files/
+
 
 # Ignore Python cache
 __pycache__/
